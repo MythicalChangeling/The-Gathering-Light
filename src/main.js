@@ -18,9 +18,10 @@ let config = {
             debug: true
         },
     },
-    scene: [Load]
+    scene: [Load, Menu, Play, GameOver]
 }
 
 let game = new Phaser.Game(config)
 
-let {gameWidth, gameHeight} = game.config
+let gameWidth = game.config.width
+let gameHeight = game.config.height
