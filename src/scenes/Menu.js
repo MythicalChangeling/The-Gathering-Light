@@ -14,7 +14,7 @@ class Menu extends Phaser.Scene {
         }
 
         //display menu text
-        this.add.text(gameWidth/2 - gameWidth/100, gameHeight - gameHeight/5, 'Use ←→ to dodge barriers', menuConfig)
+        this.add.text(gameWidth/2 - gameWidth/30, gameHeight - gameHeight/5, 'Use ←→ to dodge obstacles', menuConfig)
         this.add.text(gameWidth/2 + gameWidth/10, gameHeight - gameHeight/6 + gameHeight/150, '& gather Lights', menuConfig)
         menuConfig.fontSize = '20px'
         this.add.text(gameWidth/2 + gameWidth/8, gameHeight - gameHeight/10, 'Press → to start', menuConfig)

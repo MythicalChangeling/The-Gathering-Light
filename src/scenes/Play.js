@@ -9,9 +9,6 @@ class Play extends Phaser.Scene {
         //keys setup
         this.keys = this.input.keyboard.createCursorKeys()
 
-        // this.mc = this.physics.add.sprite(gameWidth/2, gameHeight/5, 'mc', 0)
-        // this.mc.body.setCircle(this.mc.width/2)
-        // this.mc.body.setCollideWorldBounds(true)
         this.mc = new MC(this, gameWidth/2, gameHeight/5, 'mc', 0)
 
         //UI setup
@@ -29,6 +26,11 @@ class Play extends Phaser.Scene {
 
         this.lightScore = this.add.text(gameWidth/17, gameHeight/100, this.lights, UIConfig)
         this.crystalScore = this.add.text(gameWidth/17, gameHeight/17, this.crystals, UIConfig)
+
+        this.obstacleGroup = this.add.group({
+            runChildUpdate: true    // make sure update runs on group children
+        });
+        this.newObstacle()
     }
 
     update() {
@@ -41,17 +43,13 @@ class Play extends Phaser.Scene {
         this.children.bringToTop(this.crystalScore)
 
         this.mc.update()
+    }
 
-        // this.mc.play('mc-flying', true)
-
-        // left/right movement
-        // let moveDirection = new Phaser.Math.Vector2(0, 0)
-        // if(this.keys.left.isDown) {
-        //     moveDirection.x = -1
-        // } else if(this.keys.right.isDown) {
-        //     moveDirection.x = 1
-        // }
-        // this.mc.setVelocity(dodgeSpeed*moveDirection.x, 0)
+    newObstacle(scene, speed) {
+        this.colors = ['blue', 'pink', 'purple']
+        let random = Math.floor(Math.random()*this.colors.length)
+        let obstacle = new Obstacle(this, obstacleSpeed, Phaser.Math.Between(obstacleWidth/2, gameWidth - obstacleWidth/2), gameHeight, this.colors[random] + '-obstacle', 0).setOrigin(.5, 0)
+        this.obstacleGroup.add(obstacle)
     }
 }
 
