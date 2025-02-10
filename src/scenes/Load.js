@@ -74,6 +74,8 @@ class Load extends Phaser.Scene {
 
     update() {
         //go to Menu
-        this.scene.start('menuScene')
+        // this.scene.start('menuScene')
+
+        this.scene.start('playScene')
     }
 }

@@ -25,3 +25,5 @@ let game = new Phaser.Game(config)
 
 let gameWidth = game.config.width
 let gameHeight = game.config.height
+let flySpeed = 1.5
+let dodgeSpeed = 250
