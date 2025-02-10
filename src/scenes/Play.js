@@ -30,7 +30,12 @@ class Play extends Phaser.Scene {
         this.obstacleGroup = this.add.group({
             runChildUpdate: true    // make sure update runs on group children
         });
-        this.newObstacle()
+
+        //first obstacle
+        this.time.delayedCall(1000, () => {
+            this.newObstacle()
+        })
+        
     }
 
     update() {
@@ -48,7 +53,7 @@ class Play extends Phaser.Scene {
     newObstacle(scene, speed) {
         this.colors = ['blue', 'pink', 'purple']
         let random = Math.floor(Math.random()*this.colors.length)
-        let obstacle = new Obstacle(this, obstacleSpeed, Phaser.Math.Between(obstacleWidth/2, gameWidth - obstacleWidth/2), gameHeight, this.colors[random] + '-obstacle', 0).setOrigin(.5, 0)
+        let obstacle = new Obstacle(this, obstacleSpeed, Phaser.Math.Between(obstacleWidth/2, gameWidth - obstacleWidth/2), gameHeight, this.colors[random] + '-obstacle').setOrigin(.5, 0)
         this.obstacleGroup.add(obstacle)
     }
 }
