@@ -27,7 +27,14 @@ class Play extends Phaser.Scene {
         this.lightScore = this.add.text(gameWidth/17, gameHeight/100, this.lights, UIConfig)
         this.crystalScore = this.add.text(gameWidth/17, gameHeight/17, this.crystals, UIConfig)
 
+        //Collision groups setup
         this.obstacleGroup = this.add.group({
+            runChildUpdate: true    // make sure update runs on group children
+        });
+        this.lightGroup = this.add.group({
+            runChildUpdate: true    // make sure update runs on group children
+        });
+        this.crystalGroup = this.add.group({
             runChildUpdate: true    // make sure update runs on group children
         });
 
@@ -48,6 +55,11 @@ class Play extends Phaser.Scene {
         this.children.bringToTop(this.crystalScore)
 
         this.mc.update()
+        
+        // check for collisions
+        this.physics.world.collide(this.mc, this.lightGroup, this.lightCollide, null, this);
+        this.physics.world.collide(this.mc, this.crystalGroup, this.crystalCollide, null, this);
+        this.physics.world.collide(this.mc, this.obstacleGroup, this.obstacleCollide, null, this);
     }
 
     newObstacle(scene, speed) {
@@ -56,6 +68,37 @@ class Play extends Phaser.Scene {
         let obstacle = new Obstacle(this, obstacleSpeed, Phaser.Math.Between(obstacleWidth/2, gameWidth - obstacleWidth/2), gameHeight, this.colors[random] + '-obstacle').setOrigin(.5, 0)
         this.obstacleGroup.add(obstacle)
     }
+
+    lightCollide(object1, object2) {
+        object2.play('light-get', true)
+        this.lights += 1
+        this.lightScore.text = this.lights
+        this.lightGroup.remove(object2)
+        object2.once('animationcomplete', () => {
+            object2.destroy()
+        })
+    }
+
+    crystalCollide(object1, object2) {
+        object2.play('crystal-get', true)
+        this.crystals += 1
+        this.crystalScore.text = this.crystals
+        this.crystalGroup.remove(object2)
+        object2.once('animationcomplete', () => {
+            object2.destroy()
+        })
+    }
+
+    obstacleCollide(object1, object2) {
+        gameOver = true
+        flySpeed = 0
+        object1.play('game-over', true)
+        object1.once('animationcomplete', () => {
+            object1.anims.stop()
+            object1.body.setCollideWorldBounds(false)
+            object1.setVelocityY(-600)
+        })
+    }
 }
 
 //code to add sprites
@@ -63,6 +106,6 @@ class Play extends Phaser.Scene {
 
 //code for playing animations:
 // crystal.play('crystal-get')
-// light.play('light-get')
+// 
 // mc.play('mc-flying')
 // over.play('game-over')

@@ -9,4 +9,10 @@ class Light extends Phaser.Physics.Arcade.Sprite {
         this.setVelocityY(speed)
         this.new = true
     }
+
+    update() {
+        if (gameOver) {
+            this.setVelocityY(0)
+        }
+    }
 }

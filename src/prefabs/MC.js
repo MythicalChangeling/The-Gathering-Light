@@ -8,18 +8,22 @@ class MC extends Phaser.Physics.Arcade.Sprite {
 
         this.body.setCircle(this.width/2)
         this.body.setCollideWorldBounds(true)
+        this.setImmovable()
 
         this.keys = scene.keys
     }
 
     update() {
-        // left/right movement
-        let moveDirection = new Phaser.Math.Vector2(0, 0)
-        if(this.keys.left.isDown) {
-            moveDirection.x = -1
-        } else if(this.keys.right.isDown) {
-            moveDirection.x = 1
+        if(!gameOver) {
+            // left/right movement
+            let moveDirection = new Phaser.Math.Vector2(0, 0)
+            if(this.keys.left.isDown) {
+                moveDirection.x = -1
+            } else if(this.keys.right.isDown) {
+                moveDirection.x = 1
+            }
+            this.setVelocity(dodgeSpeed*moveDirection.x, 0)
         }
-        this.setVelocity(dodgeSpeed*moveDirection.x, 0)
+        
     }
 }

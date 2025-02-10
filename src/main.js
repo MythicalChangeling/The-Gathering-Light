@@ -29,3 +29,4 @@ let flySpeed = 1.5
 let dodgeSpeed = 250
 let obstacleSpeed = -200
 let obstacleWidth = 156
+let gameOver = false
