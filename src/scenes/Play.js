@@ -4,12 +4,14 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        flySpeed = 1.5
         this.cave = this.add.tileSprite(0, 0, 600, 1048, 'cave').setOrigin(0)
         
         //keys setup
         this.keys = this.input.keyboard.createCursorKeys()
 
         this.mc = new MC(this, gameWidth/2, gameHeight/5, 'mc', 0)
+        MCSpeed = 0
 
         //UI setup
         this.UILight = this.add.sprite(gameWidth/100, gameHeight/150, 'light', 0).setOrigin(0).setScale(.75)
@@ -38,6 +40,9 @@ class Play extends Phaser.Scene {
             runChildUpdate: true    // make sure update runs on group children
         });
 
+        this.firstCrystal = true
+        this.useCrystal = false 
+
         //first obstacle
         this.time.delayedCall(1000, () => {
             this.newObstacle()
@@ -57,9 +62,22 @@ class Play extends Phaser.Scene {
         this.mc.update()
         
         // check for collisions
-        this.physics.world.collide(this.mc, this.lightGroup, this.lightCollide, null, this);
-        this.physics.world.collide(this.mc, this.crystalGroup, this.crystalCollide, null, this);
-        this.physics.world.collide(this.mc, this.obstacleGroup, this.obstacleCollide, null, this);
+        if (!gameOver) {
+            this.physics.world.collide(this.mc, this.lightGroup, this.lightCollide, null, this)
+            this.physics.world.collide(this.mc, this.crystalGroup, this.crystalCollide, null, this)
+            this.physics.world.collide(this.mc, this.obstacleGroup, this.obstacleCollide, null, this)
+        }
+
+        if (gameOver) {
+            if (Phaser.Input.Keyboard.JustDown(this.keys.left)) {
+                gameOver = false
+                this.scene.start('menuScene')
+            }
+            if (Phaser.Input.Keyboard.JustDown(this.keys.space)) {
+                gameOver = false
+                this.scene.start('playScene')
+            }
+        }
     }
 
     newObstacle(scene, speed) {
@@ -92,20 +110,46 @@ class Play extends Phaser.Scene {
     obstacleCollide(object1, object2) {
         gameOver = true
         flySpeed = 0
+        this.obstacleGroup.remove(object2)
+        object2.setVelocity(0)
         object1.play('game-over', true)
+        object1.setVelocity(0,0)
         object1.once('animationcomplete', () => {
             object1.anims.stop()
             object1.body.setCollideWorldBounds(false)
-            object1.setVelocityY(-600)
+            MCSpeed = -800
         })
+
+        // destroy mc once off screen
+        if(object1.y < -this.height) {
+            object1.destroy();
+        }
+        let gameOverConfig = {
+            fontFamily: 'Zapfino',
+            fontSize: '48px',
+            color: '#d7fffe',
+            align: 'center'
+        }
+
+        this.lightScore.text = ''
+        this.crystalScore.text = ''
+        this.UILight.destroy()
+        this.UICrystal.destroy()
+        
+        this.time.delayedCall(500, () => {
+            this.add.text(gameWidth/5, gameHeight/4, 'Game Over ', gameOverConfig)
+        gameOverConfig.fontFamily = 'Noteworthy'
+        gameOverConfig.fontSize = '20px'
+
+        this.time.delayedCall(750, () => {
+            this.add.text(gameWidth/3 + gameWidth/15, gameHeight/3 + gameHeight/15, 'Lights gathered: ' + this.lights, gameOverConfig)
+
+            this.time.delayedCall(750, () => {
+                this.add.text(gameWidth/3 + gameWidth/75, gameHeight/2 - gameHeight/27, 'Press (space) to play again', gameOverConfig)
+                this.add.text(gameWidth/3, gameHeight/2, 'or ← to go back to the menu', gameOverConfig)
+            })
+        })
+    })
+
     }
 }
-
-//code to add sprites
-// let over = this.add.sprite(0, 0, 'game-over', 0).setOrigin(0)
-
-//code for playing animations:
-// crystal.play('crystal-get')
-// 
-// mc.play('mc-flying')
-// over.play('game-over')

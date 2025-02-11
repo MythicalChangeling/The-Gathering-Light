@@ -14,6 +14,9 @@ class MC extends Phaser.Physics.Arcade.Sprite {
     }
 
     update() {
+        //keep velocity up-to-date
+        this.setVelocityY(MCSpeed)
+
         if(!gameOver) {
             // left/right movement
             let moveDirection = new Phaser.Math.Vector2(0, 0)
@@ -22,7 +25,7 @@ class MC extends Phaser.Physics.Arcade.Sprite {
             } else if(this.keys.right.isDown) {
                 moveDirection.x = 1
             }
-            this.setVelocity(dodgeSpeed*moveDirection.x, 0)
+            this.setVelocityX(dodgeSpeed*moveDirection.x)
         }
         
     }

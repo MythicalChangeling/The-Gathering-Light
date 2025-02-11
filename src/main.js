@@ -18,7 +18,7 @@ let config = {
             // debug: true
         },
     },
-    scene: [Load, Menu, Play, GameOver]
+    scene: [Load, Menu, Play]
 }
 
 let game = new Phaser.Game(config)
@@ -28,5 +28,8 @@ let gameHeight = game.config.height
 let flySpeed = 1.5
 let dodgeSpeed = 250
 let obstacleSpeed = -200
+let MCSpeed = 0
+let holdObstacleSpeed = -200
+let holdFlySpeed = 1.5
 let obstacleWidth = 156
 let gameOver = false
