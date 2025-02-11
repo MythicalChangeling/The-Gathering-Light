@@ -1,7 +1,7 @@
 //Evelyn Hald
-//Gatherer
-//Time Spent:
-//Creative Tilt:
+//The Gathering Light
+//Time Spent: ~30 hrs
+//Creative Tilt: I'm very proud of the crystal mechanics where the player can temporarily reverse gravity, it was interesting to implement and made for several fascinating edge cases that I had to debug and work around. For style, I'm fairly happy with the art that I made, particularly the animations for picking up the lights and the crystals. I also think that the music I made, while simple, contributes well to the overall feel I was aiming for.
 
 'use strict'
 

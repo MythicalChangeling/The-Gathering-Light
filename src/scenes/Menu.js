@@ -18,6 +18,8 @@ class Menu extends Phaser.Scene {
         this.add.text(gameWidth/2 + gameWidth/10, gameHeight - gameHeight/6 + gameHeight/150, '& gather Lights', menuConfig)
         menuConfig.fontSize = '20px'
         this.add.text(gameWidth/2 + gameWidth/8, gameHeight - gameHeight/10, 'Press → to start', menuConfig)
+        menuConfig.fontSize = '14px'
+        this.add.text(gameWidth/50, gameHeight - gameHeight/75, 'Made by Evelyn Hald', menuConfig).setOrigin(0, 1)
 
         //keys setup
         this.keys = this.input.keyboard.createCursorKeys()
