@@ -45,13 +45,13 @@ class Crystal extends Phaser.Physics.Arcade.Sprite {
             }
         }
 
-        if (this.scene.mc.y > gameHeight - gameHeight/5 && this.MCRewind) {
+        if (this.scene.mc.y > gameHeight - gameHeight/5 && this.MCRewind && !gameOver) {
             MCSpeed = 0
             obstacleSpeed = -holdObstacleSpeed
             flySpeed = -holdFlySpeed
         }
 
-        if (this.scene.mc.y < gameHeight/5 && this.MCUnwind) {
+        if (this.scene.mc.y < gameHeight/5 && this.MCUnwind && !gameOver) {
             MCSpeed = 0
             obstacleSpeed = -holdObstacleSpeed
             flySpeed = -holdFlySpeed
@@ -66,14 +66,14 @@ class Crystal extends Phaser.Physics.Arcade.Sprite {
 
         MCSpeed = -holdObstacleSpeed * 2
         this.MCRewind = true
-        this.MCUnwind = false
+        // this.MCUnwind = false
 
         this.unwind()
     }
 
     unwind() {
-        console.log(-holdObstacleSpeed)
         this.scene.time.delayedCall(2000000/-holdObstacleSpeed, () => {
+            console.log('delayed call!')
             holdObstacleSpeed = obstacleSpeed
             obstacleSpeed = 0
             holdFlySpeed = flySpeed

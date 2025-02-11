@@ -4,7 +4,13 @@ class Play extends Phaser.Scene {
     }
 
     create() {
+        //reset variables
         flySpeed = 1.5
+        dodgeSpeed = 250
+        obstacleSpeed = -200
+        MCSpeed = 0
+        gameOver = false
+
         this.cave = this.add.tileSprite(0, 0, 600, 1048, 'cave').setOrigin(0)
         
         //keys setup
@@ -65,7 +71,7 @@ class Play extends Phaser.Scene {
         if (!gameOver) {
             this.physics.world.collide(this.mc, this.lightGroup, this.lightCollide, null, this)
             this.physics.world.collide(this.mc, this.crystalGroup, this.crystalCollide, null, this)
-            this.physics.world.collide(this.mc, this.obstacleGroup, this.obstacleCollide, null, this)
+            this.obstacleCollision = this.physics.world.collide(this.mc, this.obstacleGroup, this.obstacleCollide, null, this)
         }
 
         if (gameOver) {
@@ -108,12 +114,15 @@ class Play extends Phaser.Scene {
     }
 
     obstacleCollide(object1, object2) {
-        gameOver = true
         flySpeed = 0
         this.obstacleGroup.remove(object2)
         object2.setVelocity(0)
         object1.play('game-over', true)
-        object1.setVelocity(0,0)
+        if (!gameOver) {
+            object1.setVelocity(0,0)
+        }
+            
+        gameOver = true
         object1.once('animationcomplete', () => {
             object1.anims.stop()
             object1.body.setCollideWorldBounds(false)
@@ -131,6 +140,7 @@ class Play extends Phaser.Scene {
             align: 'center'
         }
 
+        //clear UI
         this.lightScore.text = ''
         this.crystalScore.text = ''
         this.UILight.destroy()

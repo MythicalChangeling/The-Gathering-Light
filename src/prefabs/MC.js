@@ -6,7 +6,6 @@ class MC extends Phaser.Physics.Arcade.Sprite {
 
         this.play('mc-flying', true)
 
-        this.body.setCircle(this.width/2)
         this.body.setCollideWorldBounds(true)
         this.setImmovable()
 
