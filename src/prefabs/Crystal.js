@@ -29,20 +29,13 @@ class Crystal extends Phaser.Physics.Arcade.Sprite {
             this.setVelocityY(0)
         }
 
+        //show crystals tutorial
         if (this.scene.crystals >= 1 && this.scene.firstCrystal == true) {
             this.scene.firstCrystal = false
             this.tutorial.alpha = 1
         }
-
-        //rewind setup
-        if (this.scene.crystals > 0 && !gameOver) {
-            if (Phaser.Input.Keyboard.JustDown(this.keys.space)) {
-                this.tutorial.alpha = 0
-                this.scene.crystals -= 1
-                this.scene.crystalScore.text = this.scene.crystals
-                this.scene.useCrystal = true
-            this.rewind()
-            }
+        if (this.scene.crystals > 0) {
+            this.crystalsActive()
         }
 
         if (this.scene.mc.y > gameHeight - gameHeight/5 && this.MCRewind && !gameOver) {
@@ -58,6 +51,20 @@ class Crystal extends Phaser.Physics.Arcade.Sprite {
         }
     }
 
+    crystalsActive() {
+        //rewind setup
+        if (this.scene.crystals > 0 && !gameOver) {
+            if (Phaser.Input.Keyboard.JustDown(this.keys.space)) {
+                this.scene.sound.play('sfx-crystal-use')
+                this.tutorial.alpha = 0
+                this.scene.crystals -= 1
+                this.scene.crystalScore.text = this.scene.crystals
+                this.scene.useCrystal = true
+            this.rewind()
+            }
+        }
+    }
+
     rewind() {
         holdObstacleSpeed = obstacleSpeed
         obstacleSpeed = 0
@@ -66,14 +73,14 @@ class Crystal extends Phaser.Physics.Arcade.Sprite {
 
         MCSpeed = -holdObstacleSpeed * 2
         this.MCRewind = true
-        // this.MCUnwind = false
+        this.MCUnwind = false
 
         this.unwind()
     }
 
     unwind() {
         this.scene.time.delayedCall(2000000/-holdObstacleSpeed, () => {
-            console.log('delayed call!')
+            this.scene.sound.play('sfx-crystal-use')
             holdObstacleSpeed = obstacleSpeed
             obstacleSpeed = 0
             holdFlySpeed = flySpeed

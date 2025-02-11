@@ -25,6 +25,16 @@ class Load extends Phaser.Scene {
         this.load.image('pink-obstacle', 'pink-obstacle.png')
         this.load.image('purple-obstacle', 'purple-obstacle.png')
 
+        //load audio
+        this.load.audio('sfx-crystal', 'sfx-crystal.wav')
+        this.load.audio('sfx-light', 'sfx-light.wav')
+        this.load.audio('sfx-select', 'sfx-select.wav')
+        this.load.audio('sfx-crystal-use', 'sfx-crystal-use.wav')
+        this.load.audio('sfx-game-over', 'sfx-game-over.wav')
+        this.load.audio('music1', 'music1.m4a')
+        this.load.audio('music2', 'music2.m4a')
+        this.load.audio('music3', 'music3.m4a')
+
         //load sprites
         this.load.spritesheet('crystal', 'crystal.png', {
             frameWidth: 45,
@@ -74,8 +84,6 @@ class Load extends Phaser.Scene {
 
     update() {
         //go to Menu
-        // this.scene.start('menuScene')
-
-        this.scene.start('playScene')
+        this.scene.start('menuScene')
     }
 }

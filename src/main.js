@@ -15,7 +15,7 @@ let config = {
     physics: {
         default: 'arcade',
         arcade: {
-            debug: true
+            // debug: true
         },
     },
     scene: [Load, Menu, Play]
@@ -28,8 +28,10 @@ let gameHeight = game.config.height
 let flySpeed = 1.5
 let dodgeSpeed = 250
 let obstacleSpeed = -200
+let speedMax = -1000
 let MCSpeed = 0
 let holdObstacleSpeed = -200
 let holdFlySpeed = 1.5
 let obstacleWidth = 156
+let spawnCrystals = false
 let gameOver = false

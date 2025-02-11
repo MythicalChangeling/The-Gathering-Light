@@ -26,6 +26,5 @@ class MC extends Phaser.Physics.Arcade.Sprite {
             }
             this.setVelocityX(dodgeSpeed*moveDirection.x)
         }
-        
     }
 }

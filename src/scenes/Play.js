@@ -13,6 +13,20 @@ class Play extends Phaser.Scene {
 
         this.cave = this.add.tileSprite(0, 0, 600, 1048, 'cave').setOrigin(0)
         
+        //music setup
+        this.music1 = this.sound.add('music1', {volume: .5, loop: true})
+        this.music2 = this.sound.add('music2', {volume: .5, loop: true})
+        this.music3 = this.sound.add('music3', {volume: .5, loop: true})
+        this.music1.play()
+        this.time.delayedCall(17500, () => {
+            this.music1.stop()
+            this.music2.play()
+        })
+        this.time.delayedCall(34250, () => {
+            this.music2.stop()
+            this.music3.play()
+        })
+
         //keys setup
         this.keys = this.input.keyboard.createCursorKeys()
 
@@ -46,13 +60,27 @@ class Play extends Phaser.Scene {
             runChildUpdate: true    // make sure update runs on group children
         });
 
+        //variables to control crystal spawning and activation
         this.firstCrystal = true
         this.useCrystal = false 
+        spawnCrystals = false
+
+        //offscreen crystal to maintain access to the Crystal object
+        let crystal = new Crystal(this, obstacleSpeed, gameWidth*2, gameHeight + gameHeight/6, 'crystal').setOrigin(.5, 0)
+        this.crystalGroup.add(crystal)
 
         //first obstacle
         this.time.delayedCall(1000, () => {
             this.newObstacle()
         })
+
+        // set up difficulty increase over time
+        this.speedTimer = this.time.addEvent({
+            delay: 5000,
+            callback: this.speedUp,
+            callbackScope: this,
+            loop: true
+        });
         
     }
 
@@ -65,6 +93,7 @@ class Play extends Phaser.Scene {
         this.children.bringToTop(this.lightScore)
         this.children.bringToTop(this.crystalScore)
 
+        //manually update
         this.mc.update()
         
         // check for collisions
@@ -75,11 +104,15 @@ class Play extends Phaser.Scene {
         }
 
         if (gameOver) {
-            if (Phaser.Input.Keyboard.JustDown(this.keys.left)) {
+            if (Phaser.Input.Keyboard.JustDown(this.keys.down)) {
+                this.sound.removeAll()
+                this.sound.play('sfx-select')
                 gameOver = false
                 this.scene.start('menuScene')
             }
-            if (Phaser.Input.Keyboard.JustDown(this.keys.space)) {
+            if (Phaser.Input.Keyboard.JustDown(this.keys.up)) {
+                this.sound.removeAll()
+                this.sound.play('sfx-select')
                 gameOver = false
                 this.scene.start('playScene')
             }
@@ -93,8 +126,16 @@ class Play extends Phaser.Scene {
         this.obstacleGroup.add(obstacle)
     }
 
+    speedUp() {
+        if (obstacleSpeed > speedMax && !gameOver) {
+            obstacleSpeed -= 20
+            flySpeed += .15
+        }
+    }
+    
     lightCollide(object1, object2) {
         object2.play('light-get', true)
+        this.sound.play('sfx-light')
         this.lights += 1
         this.lightScore.text = this.lights
         this.lightGroup.remove(object2)
@@ -105,15 +146,17 @@ class Play extends Phaser.Scene {
 
     crystalCollide(object1, object2) {
         object2.play('crystal-get', true)
+        this.sound.play('sfx-crystal')
         this.crystals += 1
         this.crystalScore.text = this.crystals
         this.crystalGroup.remove(object2)
         object2.once('animationcomplete', () => {
-            object2.destroy()
+            object2.alpha = 0
         })
     }
 
     obstacleCollide(object1, object2) {
+        this.sound.play('sfx-game-over')
         flySpeed = 0
         this.obstacleGroup.remove(object2)
         object2.setVelocity(0)
@@ -130,9 +173,10 @@ class Play extends Phaser.Scene {
         })
 
         // destroy mc once off screen
-        if(object1.y < -this.height) {
+        if(object1.y < -gameHeight) {
             object1.destroy();
         }
+
         let gameOverConfig = {
             fontFamily: 'Zapfino',
             fontSize: '48px',
@@ -155,8 +199,8 @@ class Play extends Phaser.Scene {
             this.add.text(gameWidth/3 + gameWidth/15, gameHeight/3 + gameHeight/15, 'Lights gathered: ' + this.lights, gameOverConfig)
 
             this.time.delayedCall(750, () => {
-                this.add.text(gameWidth/3 + gameWidth/75, gameHeight/2 - gameHeight/27, 'Press (space) to play again', gameOverConfig)
-                this.add.text(gameWidth/3, gameHeight/2, 'or ← to go back to the menu', gameOverConfig)
+                this.add.text(gameWidth/3 + gameWidth/35, gameHeight/2 - gameHeight/27, 'Press ↑ to play again', gameOverConfig)
+                this.add.text(gameWidth/3, gameHeight/2, 'or ↓ to go back to the menu', gameOverConfig)
             })
         })
     })
